@@ -5,4 +5,16 @@ const getBooksQuery = `
     WHERE books.name LIKE ?;
 `;
 
-module.exports = { getBooksQuery };
+const getUserBooksQuery = `
+    SELECT books.id, books.name, books.year, book_instances.photo_link
+    FROM book_instances
+    JOIN books ON book_instances.book_id = books.id
+    WHERE book_instances.user_id = ?;
+`;
+
+const createBookInstanceQuery = `
+    INSERT INTO book_instances (user_id, book_id)
+    VALUES (?, ?);
+`
+
+module.exports = { getBooksQuery, getUserBooksQuery, createBookInstanceQuery };

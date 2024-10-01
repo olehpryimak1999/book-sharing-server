@@ -1,5 +1,5 @@
 const { getDbConnection } = require('./db');
-const { getBooksQuery } = require('./queries/books');
+const { getBooksQuery, getUserBooksQuery, createBookInstanceQuery } = require('./queries/books');
 const { getUserQuery, createUserQuery } = require('./queries/users');
 
 async function getBooks(params) {
@@ -34,4 +34,26 @@ async function createUser(params) {
     }
 }
 
-module.exports = { getBooks, getUserById, createUser };
+async function getBooksByUser(params) {
+    try {
+        const pool = await getDbConnection();
+        const [rows] = await pool.query(getUserBooksQuery, [params.user_id]);
+
+        return rows;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function createBookInstance(params) {
+    try {
+        const pool = await getDbConnection();
+        const [ResultSetHeader] = await pool.query(createBookInstanceQuery, [params.user, params.book]);
+
+        return ResultSetHeader.insertId;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+module.exports = { getBooks, getUserById, createUser, getBooksByUser, createBookInstance };
