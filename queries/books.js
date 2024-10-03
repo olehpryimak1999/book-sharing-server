@@ -6,9 +6,10 @@ const getBooksQuery = `
 `;
 
 const getUserBooksQuery = `
-    SELECT books.id, books.name, books.year, book_instances.photo_link
+    SELECT books.id, books.name, books.year, authors.name AS author, book_instances.photo_link
     FROM book_instances
     JOIN books ON book_instances.book_id = books.id
+    JOIN authors ON books.author_id = authors.id
     WHERE book_instances.user_id = ?;
 `;
 
@@ -17,4 +18,10 @@ const createBookInstanceQuery = `
     VALUES (?, ?);
 `
 
-module.exports = { getBooksQuery, getUserBooksQuery, createBookInstanceQuery };
+const updateBookInstancePictureQuery = `
+    UPDATE book_instances
+    SET photo_link = ?
+    WHERE id = ?;
+`
+
+module.exports = { getBooksQuery, getUserBooksQuery, createBookInstanceQuery, updateBookInstancePictureQuery };
