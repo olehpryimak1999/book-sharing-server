@@ -1,5 +1,12 @@
 const { getDbConnection } = require('./db');
-const { getBooksQuery, getUserBooksQuery, createBookInstanceQuery, updateBookInstancePictureQuery } = require('./queries/books');
+const {
+    getBooksQuery,
+    getUserBooksQuery,
+    createBookInstanceQuery,
+    updateBookInstancePictureQuery,
+    getUserBookByIdQuery,
+    deleteBookQuery
+} = require('./queries/books');
 const { getUserQuery, createUserQuery } = require('./queries/users');
 
 async function getBooks(params) {
@@ -45,6 +52,29 @@ async function getBooksByUser(params) {
     }
 }
 
+async function getUserBookById(params) {
+    console.log(params);
+    try {
+        const pool = await getDbConnection();
+        const [rows] = await pool.query(getUserBookByIdQuery, [params.user_id, params.id]);
+
+        return rows.length ? rows[0] : null;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function deleteBook(params) {
+    try {
+        const pool = await getDbConnection();
+        const [ResultSetHeader] = await pool.query(deleteBookQuery, [params.id]);
+
+        return !!ResultSetHeader.affectedRows;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function createBookInstance(params) {
     try {
         const pool = await getDbConnection();
@@ -59,12 +89,21 @@ async function createBookInstance(params) {
 async function updateBookInstancePicture(params) {
     try {
         const pool = await getDbConnection();
-        await pool.query(updateBookInstancePictureQuery, [params.picture, params.id]);
+        const [ResultSetHeader] = await pool.query(updateBookInstancePictureQuery, [params.picture, params.id]);
 
-        return;
+        return !!ResultSetHeader.affectedRows;
     } catch (e) {
         console.log(e);
     }
 }
 
-module.exports = { getBooks, getUserById, createUser, getBooksByUser, createBookInstance, updateBookInstancePicture };
+module.exports = {
+    getBooks,
+    getUserById,
+    createUser,
+    getBooksByUser,
+    createBookInstance,
+    updateBookInstancePicture,
+    getUserBookById,
+    deleteBook
+};

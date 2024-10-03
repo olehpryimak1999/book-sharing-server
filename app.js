@@ -4,7 +4,7 @@ const cors = require('cors');
 const express = require('express');
 const multer = require('multer');
 const { Storage } = require("@google-cloud/storage");
-const { getBooks, getUserById, createUser, getBooksByUser, createBookInstance, updateBookInstancePicture } = require('./requests');
+const { getBooks, getUserById, createUser, getBooksByUser, createBookInstance, updateBookInstancePicture, getUserBookById, deleteBook } = require('./requests');
 const { verify, getUserInfoByToken } = require('./auth');
 
 const upload = multer({
@@ -108,6 +108,36 @@ app.post(`${API_PREFIX}/my-books`, upload.single('file'), async (req, res) => {
         res.status(500).send('Сталася помилка');
     }
 });
+
+app.delete(`${API_PREFIX}/my-books/:id`, async (req, res) => {
+    const token = req.headers.authorization;
+    const id = await verify(token);
+
+    if (!id) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    const user = await getUserById({ id });
+    const bookId = req.params.id;
+    const book = await getUserBookById({ id: bookId, user_id: user.user_id });
+
+    if (!book) {
+        return res.status(404).send('Книга не знайдена');
+    }
+
+    const storage = new Storage({
+        keyFilename: "service-account.json",
+    });
+
+    const bucketName = 'books-storage-images';
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file(`picture-${book.id}`);
+
+    await file.delete();
+    await deleteBook({ id: book.id });
+
+    res.status(200).send('Книга успішно видалена');
+})
 
 app.get(`${API_PREFIX}`, (req, res) => {
     res.status(200);
