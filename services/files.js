@@ -1,3 +1,4 @@
+const axios = require('axios');
 const { Storage } = require("@google-cloud/storage");
 
 const storage = new Storage({
@@ -25,7 +26,7 @@ exports.uploadPhotoFromBuffer = async ({ bucketName, name, file }) => {
             resolve(`https://storage.googleapis.com/${bucketName}/${blob.name}`);
         });
 
-        blobStream.end(file.buffer);
+        blobStream.end(file);
     });
 };
 
@@ -34,4 +35,14 @@ exports.deleteFile = async ({ bucketName, name }) => {
     const file = bucket.file(name);
 
     await file.delete();
+}
+
+exports.downloadFileByUrl = async ({ url }) => {
+    const { data } = await axios({
+        url,
+        method: 'GET',
+        responseType: 'arraybuffer'
+    });
+
+    return Buffer.from(data);
 }

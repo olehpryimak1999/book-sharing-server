@@ -17,7 +17,7 @@ exports.my = async (req, res) => {
 exports.create = async (req, res) => {
     const createdId = await bookService.createBookInstance({ user: req.user.user_id, book: req.body.book_id });
 
-    const picture = await fileService.uploadPhotoFromBuffer({ bucketName: 'books-storage-images', name: `picture-${createdId}`, file: req.file })
+    const picture = await fileService.uploadPhotoFromBuffer({ bucketName: 'books-storage-images', name: `picture-${createdId}`, file: req.file.buffer })
 
     await bookService.updateBookPicture({ id: createdId, picture });
 
