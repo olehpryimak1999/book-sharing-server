@@ -25,3 +25,18 @@ exports.createUser = async (params) => {
         console.log(e);
     }
 }
+
+exports.updateUser = async (params) => {
+    const query = `
+        UPDATE users
+        SET address = ?
+        WHERE user_id = ?;
+    `
+
+    try {
+        const pool = await getDbConnection();
+        await pool.query(query, [params.address, params.user_id]);
+    } catch (e) {
+        console.log(e);
+    }
+}

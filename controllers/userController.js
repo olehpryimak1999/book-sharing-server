@@ -17,3 +17,10 @@ exports.info = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ ok: true, ...curUser }));
 }
+
+exports.update = async (req, res) => {
+    await userService.updateUser({ ...req.user, ...req.body });
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ ok: true }));
+}
