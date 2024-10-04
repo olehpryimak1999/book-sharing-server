@@ -3,7 +3,7 @@ require('dotenv').config();
 const { OAuth2Client } = require('google-auth-library');
 const DEFAULT_ISS = 'https://accounts.google.com';
 
-async function verify(token) {
+exports.verify = async (token) => {
     const client = new OAuth2Client();
 
     try {
@@ -20,7 +20,7 @@ async function verify(token) {
     }
 }
 
-async function getUserInfoByToken(token) {
+exports.getUserInfo = async (token) => {
     const client = new OAuth2Client();
 
     try {
@@ -34,5 +34,3 @@ async function getUserInfoByToken(token) {
         console.error(e);
     }
 }
-
-module.exports = { verify, getUserInfoByToken };
