@@ -19,7 +19,7 @@ exports.info = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-    await userService.updateUser({ ...req.user, ...req.body });
+    await userService.updateUser({ ...req.body, id: req.user.user_id });
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ ok: true }));
