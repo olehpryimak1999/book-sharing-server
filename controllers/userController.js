@@ -24,3 +24,10 @@ exports.update = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ ok: true }));
 }
+
+exports.updatePhoto = async (req, res) => {
+    await fileService.uploadPhotoFromBuffer({ bucketName: 'books-storage-images', name: `profile-${req.googleId}`, file: req.file.buffer });
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ ok: true }));
+}
