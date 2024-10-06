@@ -1,5 +1,7 @@
 const fileService = require('../services/files');
 const instanceService = require('../services/instance');
+const userService = require('../services/user');
+const bookService = require('../services/book');
 
 exports.my = async (req, res) => {
     const books = await instanceService.getBooksByUser(req.user);
@@ -37,7 +39,14 @@ exports.getBooksToExchange = async (req, res) => {
 }
 
 exports.getBookById = async (req, res) => {
-    const book = await instanceService.getBookById({ id: req.id });
+    const instance = await instanceService.getBookById({ id: req.params.id });
 
-    res.json(book);
+    if (!instance) {
+        res.status(404).send('Not found');
+    }
+
+    const user = await userService.getUserById({ id: instance.user_id });
+    const book = await bookService.getBookById({ id: instance.book_id });
+
+    res.json({ instance, book, user });
 }

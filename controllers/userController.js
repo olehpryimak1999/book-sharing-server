@@ -11,7 +11,7 @@ exports.info = async (req, res) => {
         const picture = await fileService.uploadPhotoFromBuffer({ bucketName: 'books-storage-images', name: `profile-${req.googleId}`, file: pictureBuffer });
 
         await userService.createUser({ ...userInfo, picture });
-        curUser = await userService.getUserById({ id: req.googleId });
+        curUser = await userService.getUserByGoogleId({ id: req.googleId });
     }
 
     res.setHeader('Content-Type', 'application/json');

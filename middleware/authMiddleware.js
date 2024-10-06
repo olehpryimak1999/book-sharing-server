@@ -14,7 +14,7 @@ exports.authenticate = async (req, res, next) => {
 
     req.token = req.headers.authorization;
     req.googleId = id;
-    req.user = await userService.getUserById({ id });
+    req.user = await userService.getUserByGoogleId({ id });
 
     next();
 };

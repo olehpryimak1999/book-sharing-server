@@ -3,6 +3,18 @@ const {getDbConnection} = require("../db");
 exports.getUserById = async (params) => {
     try {
         const pool = await getDbConnection();
+        const [rows] = await pool.query('SELECT * FROM users WHERE user_id = ?;', [`${params.id}`]);
+
+        return rows.length ? rows[0] : null;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+}
+
+exports.getUserByGoogleId = async (params) => {
+    try {
+        const pool = await getDbConnection();
         const [rows] = await pool.query('SELECT * FROM users WHERE google_id = ?;', [`${params.id}`]);
 
         return rows.length ? rows[0] : null;
