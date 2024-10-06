@@ -36,3 +36,9 @@ exports.delete = async (req, res) => {
 
     res.status(200).send('Книга успішно видалена');
 }
+
+exports.getBooksToExchange = async (req, res) => {
+    const books = await bookService.getBooksForExchange(req.user);
+
+    res.json(books);
+}

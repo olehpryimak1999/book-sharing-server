@@ -6,9 +6,10 @@ const upload = multer({
     storage: multer.memoryStorage(),
 });
 
-router.get(`/all`, bookController.books)
+router.get(`/all`, bookController.books);
 router.get(`/my`, bookController.my);
-router.post('/my', upload.single('file'), bookController.create)
-router.delete('/my/:id', bookController.delete)
+router.post('/my', upload.single('file'), bookController.create);
+router.delete('/my/:id', bookController.delete);
+router.get('/exchange/list', bookController.getBooksToExchange);
 
 module.exports = router;

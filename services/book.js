@@ -37,6 +37,25 @@ exports.getBooksByUser = async (params) => {
     }
 }
 
+exports.getBooksForExchange = async (params) => {
+    const query = `
+        SELECT book_instances.id, books.name, books.year, authors.name AS author, book_instances.photo_link
+        FROM book_instances
+        JOIN books ON book_instances.book_id = books.id
+        JOIN authors ON books.author_id = authors.id
+        WHERE book_instances.user_id <> ?;
+    `;
+
+    try {
+        const pool = await getDbConnection();
+        const [rows] = await pool.query(query, [params.user_id]);
+
+        return rows;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 exports.createBookInstance = async (params) => {
     const query = `
         INSERT INTO book_instances (user_id, book_id)
