@@ -33,7 +33,7 @@ exports.delete = async (req, res) => {
 }
 
 exports.getBooksToExchange = async (req, res) => {
-    const books = await instanceService.getBooksForExchange(req.user);
+    const books = await instanceService.getBooksForExchange({ book: req.params.id, user_id: req.user.user_id });
 
     res.json(books);
 }

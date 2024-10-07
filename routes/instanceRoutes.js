@@ -10,7 +10,6 @@ const instanceController = require("../controllers/instanceController");
 router.get(`/my`, instanceController.my);
 router.post('/my', upload.single('file'), instanceController.create);
 router.delete('/my/:id', instanceController.delete);
-router.get('/exchange/list', instanceController.getBooksToExchange);
-router.get('/exchange/:id', instanceController.getBookById);
+router.get('/exchange/:id', instanceController.getBooksToExchange);
 
 module.exports = router;

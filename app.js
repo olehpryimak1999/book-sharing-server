@@ -6,6 +6,7 @@ const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const instanceRoutes = require('./routes/instanceRoutes');
+const exchangeRoutes = require('./routes/exchangeRoutes');
 const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(authMiddleware.authenticate);
 app.use(`${API_PREFIX}/user`, userRoutes);
 app.use(`${API_PREFIX}/book`, bookRoutes);
 app.use(`${API_PREFIX}/instance`, instanceRoutes);
+app.use(`${API_PREFIX}/exchange`, exchangeRoutes);
 
 app.use((err, req, res) => {
     res.status(500).send('Server error');
