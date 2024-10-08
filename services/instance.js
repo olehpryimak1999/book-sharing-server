@@ -21,15 +21,28 @@ exports.getBooksByUser = async (params) => {
 
 exports.getBooksForExchange = async (params) => {
     const query = `
-        SELECT book_instances.id, book_instances.photo_link, users.address AS userAddress, users.phone AS userPhone, users.first_name, users.middle_name, users.last_name
+        SELECT
+            book_instances.id,
+            book_instances.photo_link,
+            users.address AS userAddress,
+            users.phone AS userPhone,
+            users.first_name,
+            users.middle_name,
+            users.last_name,
+            book_exchanges.exchange_status
         FROM book_instances
         JOIN users ON book_instances.user_id = users.user_id
-        WHERE book_instances.book_id = ? AND book_instances.user_id <> ?;
+        LEFT JOIN book_exchanges
+            ON book_exchanges.book_id = book_instances.id
+            AND book_exchanges.user2_id = ?
+            AND book_exchanges.exchange_status = 1
+        WHERE book_instances.book_id = ?
+            AND book_instances.user_id <> ?;
     `;
 
     try {
         const pool = await getDbConnection();
-        const [rows] = await pool.query(query, [+params.book, params.user_id]);
+        const [rows] = await pool.query(query, [params.user_id, +params.book, params.user_id]);
 
         return rows;
     } catch (e) {
