@@ -21,7 +21,7 @@ app.use(`${API_PREFIX}/book`, bookRoutes);
 app.use(`${API_PREFIX}/instance`, instanceRoutes);
 app.use(`${API_PREFIX}/exchange`, exchangeRoutes);
 
-app.use((err, req, res) => {
+app.use(( req, res) => {
     res.status(500).send('Server error');
 });
 
